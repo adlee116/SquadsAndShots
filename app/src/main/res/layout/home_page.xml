@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context="com.shots.squads_and_shots.presentation.homePage.HomePage">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:padding="8dp"
+        android:text="@string/squads_and_shots"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        android:textStyle="italic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Name:"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="@id/nameEditText"
+        app:layout_constraintBottom_toBottomOf="@id/nameEditText"
+        android:textSize="22dp"
+        app:layout_constraintLeft_toLeftOf="@id/createGameButton"
+        android:fontFamily="sans-serif-black"
+        />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="30dp"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toRightOf="@id/nameText"
+        app:layout_constraintRight_toRightOf="@id/joinGameButton"
+        app:layout_constraintBottom_toTopOf="@id/createGameButton"
+        android:background="@drawable/curved_edge"/>
+
+    <Button
+        android:id="@+id/createGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curved_edge"
+        android:text="Create Game"
+        android:textColor="@color/black"
+        app:layout_constraintRight_toLeftOf="@id/guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/joinGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curved_edge"
+        android:text="Join Game"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toRightOf="@id/guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/black">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:textColor="@color/white"
+        android:text="@string/waiting_for_lead_to_start_the_game"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="italic"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:padding="18dp"/>
+
+    <TextView
+        android:id="@+id/lobbyCodeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textStyle="italic"
+        android:textSize="32sp"
+        android:text="@string/lobby_code"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textStyle="italic|bold"
+        android:textSize="32sp"
+        app:layout_constraintLeft_toRightOf="@id/lobbyCodeTitle"
+        app:layout_constraintTop_toTopOf="@id/lobbyCodeTitle"
+        app:layout_constraintBottom_toBottomOf="@id/lobbyCodeTitle"
+        android:padding="12dp"
+        tools:text="YTP9D"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

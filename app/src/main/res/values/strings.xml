@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">squads_and_shots</string>
+    <string name="squads_and_shots">Squads&amp;Shots</string>
+    <string name="waiting_for_lead_to_start_the_game">Waiting for lead to start the game…</string>
+    <string name="lobby_code">Lobby Code:</string>
+    <string name="players">Players</string>
+    <string name="start_game">Start Game</string>
+    <string name="please_enter_game_code">PLEASE ENTER GAME CODE</string>
+    <string name="xdlro">XDLRO</string>
+    <string name="join_game">Join Game</string>
+    <string name="warzone">Warzone</string>
+    <string name="apex">Apex</string>
+    <string name="fortnite">Fortnite</string>
+    <string name="select_a_game">Select a game</string>
+</resources>
