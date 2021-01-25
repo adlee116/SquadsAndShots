@@ -9,7 +9,7 @@ class GetGeneralRulesUseCase(private val storageRepository: StorageRepository) :
     BaseUseCase<Boolean, RuleListeners>() {
     override suspend fun run(params: RuleListeners): Result<Boolean, Exception> {
         return try {
-            val collection = storageRepository.getCollection("rules")
+            val collection = storageRepository.getCollection("Rules")
             collection.addOnSuccessListener(params.successListener)
             collection.addOnFailureListener(params.failureListener)
             Result.Success(true)

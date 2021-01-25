@@ -71,9 +71,9 @@ class LeadHoldingLobby : AppCompatActivity() {
             }
             roomModel = it
             updatePlayers(it.players)
-            roomModel.gameRules?.let { rules ->
+            roomModel.generalRules?.let { rules ->
                 if(rules.isNotEmpty()) {
-                    Toast.makeText(this, "Game would be starting now!!", Toast.LENGTH_SHORT).show()
+                    //TODO go to main game page for all users
                 }
             }
         })
@@ -81,7 +81,9 @@ class LeadHoldingLobby : AppCompatActivity() {
 
         })
         viewModel.generalRules.observe(this, Observer {
-            roomModel.gameRules = it
+            roomModel.generalRules = it.generalRules
+            roomModel.secretTasks = it.secretTasks
+            roomModel.nominatedRules = it.nominatedRules
             viewModel.startGame(roomModel)
         })
     }

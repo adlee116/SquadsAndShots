@@ -6,9 +6,9 @@ import com.shots.squads_and_shots.presentation.models.SecretTasks
 
 class RoomModel {
     var players: HashMap<String, Player> = HashMap()
-    var gameRules: List<GeneralRule>? = null
-    var nominatedRules: MutableList<NominatedRule>? = null
-    var secretTasks: MutableList<SecretTasks>? = null
+    var generalRules: List<GeneralRule>? = null
+    var nominatedRules: List<NominatedRule>? = null
+    var secretTasks: List<SecretTasks>? = null
     var roomCode: String = ""
 }
 

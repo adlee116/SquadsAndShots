@@ -15,7 +15,6 @@ import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.JoinModel
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.ListenerRequest
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.Player
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.RoomModel
-import com.shots.squads_and_shots.presentation.models.GeneralRule
 import com.shots.squads_and_shots.presentation.models.Rules
 
 class LeadHoldingLobbyViewModel(
@@ -32,8 +31,8 @@ class LeadHoldingLobbyViewModel(
     private val _roomModelLiveData = MutableLiveData<RoomModel>()
     val roomModelLiveData: LiveData<RoomModel> get() = _roomModelLiveData
 
-    private val _generalRules = MutableLiveData<List<GeneralRule>>()
-    val generalRules : LiveData<List<GeneralRule>> get() = _generalRules
+    private val _generalRules = MutableLiveData<Rules>()
+    val generalRules : LiveData<Rules> get() = _generalRules
 
     fun joinRoom(roomCode: String, player: Player) {
         val joinModel = JoinModel(roomCode, player)
@@ -80,7 +79,7 @@ class LeadHoldingLobbyViewModel(
 
     private fun createRuleListeners(): RuleListeners {
         val success = OnSuccessListener<QuerySnapshot> {
-            _generalRules.value = it.toObjects(GeneralRule::class.java)
+            _generalRules.value = it.documents.get(0).toObject(Rules::class.java)
         }
         val failure = OnFailureListener {
             Log.d("Creare rule listeners","Failed, unsure what to do here just yet")
@@ -105,17 +104,7 @@ class LeadHoldingLobbyViewModel(
     }
 
     fun startGame(roomModel: RoomModel) {
-        val rulesForGame = roomModel.gameRules ?: mutableListOf()
-        val secretTasksForGame = roomModel.secretTasks ?: mutableListOf()
-        val nominatedRulesForGame = roomModel.nominatedRules ?: mutableListOf()
-
-        val rules = Rules(
-            rulesForGame,
-            secretTasksForGame,
-            nominatedRulesForGame
-        )
-        val startGameRequest = StartGameRequest(roomModel.roomCode, rules)
-        startGameUseCase.invoke(viewModelScope, startGameRequest)
+        startGameUseCase.invoke(viewModelScope, roomModel)
     }
 
 }

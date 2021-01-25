@@ -31,7 +31,7 @@ class RoomModelRepository(private val database: DatabaseInterface) {
         return database.getReference(FirebaseDatabase.ROOM).child(roomCode).get()
     }
 
-    fun startGame(roomCode: String, rules: Rules) {
-        database.getReference(FirebaseDatabase.ROOM).child(roomCode).child(FirebaseDatabase.RULES).setValue(rules)
+    fun startGame(room: RoomModel) {
+        createRoom(room)
     }
 }
