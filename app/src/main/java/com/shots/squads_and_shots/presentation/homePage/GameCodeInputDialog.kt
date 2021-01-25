@@ -2,12 +2,16 @@ package com.shots.squads_and_shots.presentation.homePage
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.database.DataSnapshot
 import com.shots.squads_and_shots.databinding.GameCodeInputDialogBinding
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.LeadHoldingLobby
 import org.koin.androidx.viewmodel.ext.android.viewModel

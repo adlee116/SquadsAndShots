@@ -24,6 +24,7 @@ class LeadHoldingLobby : AppCompatActivity() {
     private var userName: String? = null
     private var leader: Boolean = false
     lateinit var player: Player
+    lateinit var roomModel: RoomModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +38,7 @@ class LeadHoldingLobby : AppCompatActivity() {
         setObservers()
         setClickListeners()
 
-        userName?.let {
-            player = createPersonalPlayer(it, uniqueUserCode)
-        }
+        userName?.let { player = createPersonalPlayer(it, uniqueUserCode) }
 
         adapter.addPlayer(player.name)
         if (leader) {
@@ -70,10 +69,20 @@ class LeadHoldingLobby : AppCompatActivity() {
                 binding.lobbyCode.text = it.roomCode
                 viewModel.joinRoom(it.roomCode, player)
             }
+            roomModel = it
             updatePlayers(it.players)
+            roomModel.gameRules?.let { rules ->
+                if(rules.isNotEmpty()) {
+                    Toast.makeText(this, "Game would be starting now!!", Toast.LENGTH_SHORT).show()
+                }
+            }
         })
         viewModel.roomModelJoinedResult.observe(this, Observer {
 
+        })
+        viewModel.generalRules.observe(this, Observer {
+            roomModel.gameRules = it
+            viewModel.startGame(roomModel)
         })
     }
 
@@ -87,7 +96,7 @@ class LeadHoldingLobby : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.startGameButton.setOnClickListener {
-            Toast.makeText(this, "Starting game", Toast.LENGTH_SHORT).show()
+            startGame()
         }
     }
 
@@ -107,6 +116,10 @@ class LeadHoldingLobby : AppCompatActivity() {
         roomModel.roomCode = roomCode
 
         viewModel.createRoomOnFirebase(roomModel)
+    }
+
+    private fun startGame() {
+        viewModel.getGeneralRules()
     }
 
     private fun generateGameCode(): String {

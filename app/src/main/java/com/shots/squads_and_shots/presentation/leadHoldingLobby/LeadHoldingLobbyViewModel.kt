@@ -1,24 +1,29 @@
 package com.shots.squads_and_shots.presentation.leadHoldingLobby
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.shots.squads_and_shots.domain.AddRoomListener
-import com.shots.squads_and_shots.domain.CreateRoomUseCase
-import com.shots.squads_and_shots.domain.JoinRoomUseCase
+import com.google.firebase.firestore.QuerySnapshot
+import com.shots.squads_and_shots.domain.*
+import com.shots.squads_and_shots.network.StartGameRequest
+import com.shots.squads_and_shots.network.models.RuleListeners
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.JoinModel
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.ListenerRequest
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.Player
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.RoomModel
+import com.shots.squads_and_shots.presentation.models.GeneralRule
+import com.shots.squads_and_shots.presentation.models.Rules
 
 class LeadHoldingLobbyViewModel(
     private val createRoomUseCase: CreateRoomUseCase,
     private val joinRoomUseCase: JoinRoomUseCase,
-    private val addRoomListener: AddRoomListener
+    private val addRoomListener: AddRoomListener,
+    private val getGeneralRulesUseCase: GetGeneralRulesUseCase,
+    private val startGameUseCase: StartGameUseCase
 ) : ViewModel() {
 
     var roomModelCreatedResult: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -26,6 +31,9 @@ class LeadHoldingLobbyViewModel(
 
     private val _roomModelLiveData = MutableLiveData<RoomModel>()
     val roomModelLiveData: LiveData<RoomModel> get() = _roomModelLiveData
+
+    private val _generalRules = MutableLiveData<List<GeneralRule>>()
+    val generalRules : LiveData<List<GeneralRule>> get() = _generalRules
 
     fun joinRoom(roomCode: String, player: Player) {
         val joinModel = JoinModel(roomCode, player)
@@ -65,6 +73,22 @@ class LeadHoldingLobbyViewModel(
         }
     }
 
+    fun getGeneralRules() {
+        val rulesListeners = createRuleListeners()
+        getGeneralRulesUseCase.invoke(viewModelScope, rulesListeners) {}
+    }
+
+    private fun createRuleListeners(): RuleListeners {
+        val success = OnSuccessListener<QuerySnapshot> {
+            _generalRules.value = it.toObjects(GeneralRule::class.java)
+        }
+        val failure = OnFailureListener {
+            Log.d("Creare rule listeners","Failed, unsure what to do here just yet")
+        }
+        return RuleListeners(success, failure)
+
+    }
+
     private fun createRoomListenerRequest(roomCode: String): ListenerRequest {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -78,6 +102,20 @@ class LeadHoldingLobbyViewModel(
             }
         }
         return ListenerRequest(listener, roomCode)
+    }
+
+    fun startGame(roomModel: RoomModel) {
+        val rulesForGame = roomModel.gameRules ?: mutableListOf()
+        val secretTasksForGame = roomModel.secretTasks ?: mutableListOf()
+        val nominatedRulesForGame = roomModel.nominatedRules ?: mutableListOf()
+
+        val rules = Rules(
+            rulesForGame,
+            secretTasksForGame,
+            nominatedRulesForGame
+        )
+        val startGameRequest = StartGameRequest(roomModel.roomCode, rules)
+        startGameUseCase.invoke(viewModelScope, startGameRequest)
     }
 
 }

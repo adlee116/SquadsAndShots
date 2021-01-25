@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.shots.squads_and_shots.databinding.HomePageBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomePage : AppCompatActivity() {
-
-    private val viewModel: HomePageViewModel by viewModel()
 
     private lateinit var binding: HomePageBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +14,6 @@ class HomePage : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         setListeners()
-        setObservers()
     }
 
     private fun setListeners() {
@@ -51,23 +47,11 @@ class HomePage : AppCompatActivity() {
         fragment.show(this.supportFragmentManager, "GameChooserDialog")
     }
 
-    private fun setObservers() {
-
-    }
-
     private fun isNameValid(): Boolean {
         return getNameText()?.isNotEmpty() ?: false
     }
 
     private fun getNameText(): CharSequence? {
         return binding.nameEditText.text
-    }
-
-    private fun getGameCode(): String {
-        return "HG7TY"
-    }
-
-    private fun isGameCodeValid(): Boolean {
-        return true
     }
 }
