@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shots.squads_and_shots.databinding.GameRoomBinding
+import com.shots.squads_and_shots.network.models.DrinkOccasion
 import com.shots.squads_and_shots.presentation.homePage.GameChooserDialog
 import com.shots.squads_and_shots.presentation.models.SecretTasks
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,6 +34,7 @@ class MainGameRoom: AppCompatActivity() {
             binding.lobbyCode.text = it
             viewModel.createValueEventListener(it)
             roomCode = it
+            viewModel.observeDrinkHistoryList(roomCode)
         }
     }
 
@@ -52,6 +54,16 @@ class MainGameRoom: AppCompatActivity() {
             }
             } ?: run {
                 hideSecretTask()
+            }
+        })
+
+        viewModel.drinkHistory.observe(this, Observer {
+            viewModel.checkIfINeedToDrink(it)
+        })
+
+        viewModel.drinkOccasions.observe(this, Observer {
+            if(it.isNotEmpty()) {
+                showTimeToDrinkDialog(it)
             }
         })
     }
@@ -82,7 +94,8 @@ class MainGameRoom: AppCompatActivity() {
     }
 
     private fun showRuleDetail(task: RuleViewHolderItem) {
-    //TODO create rule detail dialog fragment
+        val fragment = DrinkDetailFragment.newInstance(task.title, task.description)
+        fragment.show(this.supportFragmentManager, "AreYouSureDrinkPromptFragment")
     }
 
     private fun showDrinkAreYouSure(rule: RuleViewHolderItem) {
@@ -105,6 +118,10 @@ class MainGameRoom: AppCompatActivity() {
         binding.secretTaskTitle.isVisible = false
         binding.secretDownButtonImage.isVisible = false
         binding.secretTitle.isVisible = false
+    }
+
+    private fun showTimeToDrinkDialog(list: List<DrinkOccasion>) {
+
     }
 
 }

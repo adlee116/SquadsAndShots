@@ -9,7 +9,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shots.squads_and_shots.databinding.AreYouSureDrinkPromptFragmentBinding
-import com.shots.squads_and_shots.network.models.DrinkOccasion
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.Player
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,10 +23,6 @@ class AreYouSureDrinkPromptFragment: DialogFragment() {
     lateinit var ruleTitle: String
     lateinit var ruleFunnyString: String
     lateinit var playersToDrinkAdapter: PlayersToDrinkAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -54,7 +49,7 @@ class AreYouSureDrinkPromptFragment: DialogFragment() {
 
         setAdapter()
         setObservers()
-        viewModel.observeDrinkHistoryList(roomCode)
+        addPlayersToPrompt(playersToDrink)
         setOnClickListeners()
     }
 
@@ -73,16 +68,6 @@ class AreYouSureDrinkPromptFragment: DialogFragment() {
                 Toast.makeText(requireContext(), "Failed to submit drink, please try again", Toast.LENGTH_SHORT).show()
             }
         })
-
-        viewModel.drinkHistory.observe(viewLifecycleOwner, Observer {
-            viewModel.checkIfINeedToDrink(it)
-        })
-
-        viewModel.drinkOccasions.observe(viewLifecycleOwner, Observer {
-            if(it.isNotEmpty()) {
-                showTimeToDrinkDialog(it)
-            }
-        })
     }
 
     private fun setOnClickListeners() {
@@ -91,8 +76,8 @@ class AreYouSureDrinkPromptFragment: DialogFragment() {
         }
     }
 
-    private fun showTimeToDrinkDialog(list: List<DrinkOccasion>) {
-
+    private fun addPlayersToPrompt(players: ArrayList<Player>) {
+        playersToDrinkAdapter.updateItems(players)
     }
 
     companion object {

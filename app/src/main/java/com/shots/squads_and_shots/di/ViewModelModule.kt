@@ -13,6 +13,6 @@ val viewModelModule = module {
     viewModel { GameChooserViewModel() }
     viewModel { LeadHoldingLobbyViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { GameCodeInputViewModel(get()) }
-    viewModel { GameRoomViewModel(get(), get()) }
-    viewModel { AreYouSureDrinkPromptViewModel( get(), get(), get() ) }
+    viewModel { GameRoomViewModel(get(), get(), get()) }
+    viewModel { AreYouSureDrinkPromptViewModel( get() ) }
 }
