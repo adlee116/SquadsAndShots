@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.leadHoldingLobby.LeadHoldingLobby"/>
+        <activity android:name=".presentation.mainGameRoom.MainGameRoom"/>
     </application>
 
 </manifest>

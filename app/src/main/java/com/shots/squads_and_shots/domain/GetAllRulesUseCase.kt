@@ -5,7 +5,7 @@ import com.shots.squads_and_shots.core.Result
 import com.shots.squads_and_shots.network.models.RuleListeners
 import com.shots.squads_and_shots.network.repositories.StorageRepository
 
-class GetGeneralRulesUseCase(private val storageRepository: StorageRepository) :
+class GetAllRulesUseCase(private val storageRepository: StorageRepository) :
     BaseUseCase<Boolean, RuleListeners>() {
     override suspend fun run(params: RuleListeners): Result<Boolean, Exception> {
         return try {

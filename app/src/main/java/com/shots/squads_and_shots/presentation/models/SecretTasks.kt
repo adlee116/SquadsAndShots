@@ -1,9 +1,9 @@
 package com.shots.squads_and_shots.presentation.models
 
-class SecretTasks {
-    val title: String = ""
-    val description: String = ""
-    val image: String = ""
-    val playerId: String = ""
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+class SecretTasks: Rule(), Parcelable {
 }
 

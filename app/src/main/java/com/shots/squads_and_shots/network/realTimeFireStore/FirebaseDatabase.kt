@@ -17,11 +17,7 @@ class FirebaseDatabase: DatabaseInterface {
         reference.child(path).child(id).setValue(postValue)
     }
 
-    companion object {
-        val ROOM = "room"
-        val PLAYERS = "players"
-        val RULES = "rules"
-    }
+
 
 
 }

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <TextView
+        android:id="@+id/lobbyCodeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lobby_code"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="italic|bold"
+        app:layout_constraintRight_toLeftOf="@id/guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lobbyCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:textStyle="italic|bold"
+        app:layout_constraintLeft_toRightOf="@id/guideline2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GU30L" />
+
+    <LinearLayout
+        android:id="@+id/titleSep"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/lobbyCodeTitle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <TextView
+        android:id="@+id/playersText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/players"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="italic|bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleSep" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playerNameList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:foregroundGravity="center"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playersText"
+        tools:itemCount="4"
+        tools:listitem="@layout/main_game_player_card" />
+
+    <TextView
+        android:id="@+id/secretTaskTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/your_secret_task"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playerNameList" />
+
+    <LinearLayout
+        android:id="@+id/secretTaskItem"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="6dp"
+        android:background="@drawable/curved_edge"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@id/secretTaskTitle" />
+
+    <TextView
+        android:id="@+id/secretTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="@id/secretTaskItem"
+        app:layout_constraintLeft_toLeftOf="@id/secretTaskItem"
+        app:layout_constraintRight_toLeftOf="@id/secretDownButtonImage"
+        app:layout_constraintTop_toTopOf="@id/secretTaskItem"
+        tools:text="Scavanger Hunt" />
+
+    <ImageView
+        android:id="@+id/secretDownButtonImage"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="80dp"
+        android:src="@drawable/down_arrow_foreground"
+        app:layout_constraintBottom_toBottomOf="@id/secretTaskItem"
+        app:layout_constraintRight_toRightOf="@id/secretTaskItem"
+        app:layout_constraintTop_toTopOf="@id/secretTaskItem" />
+
+    <TextView
+        android:id="@+id/nominatedRuleTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/nominated_rules"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/secretTaskItem" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nominatedRuleRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/rules_card"
+        tools:itemCount="4"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/nominatedRuleTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/gameRuleTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/game_rules"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nominatedRuleRecycler" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rulesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/gameRuleTitle"
+        tools:listitem="@layout/rules_card" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

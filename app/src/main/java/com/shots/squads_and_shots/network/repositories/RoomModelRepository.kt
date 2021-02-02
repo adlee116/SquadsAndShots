@@ -16,19 +16,19 @@ import com.shots.squads_and_shots.presentation.models.SecretTasks
 class RoomModelRepository(private val database: DatabaseInterface) {
 
     fun createRoom(room: RoomModel) {
-        database.getReference(FirebaseDatabase.ROOM).child(room.roomCode).setValue(room)
+        database.getReference(DatabaseInterface.ROOM).child(room.roomCode).setValue(room)
     }
 
     fun joinRoom(roomCode: String, player: Player) {
-        database.getReference(FirebaseDatabase.ROOM).child(roomCode).child(FirebaseDatabase.PLAYERS).child(player.id).setValue(player)
+        database.getReference(DatabaseInterface.ROOM).child(roomCode).child(DatabaseInterface.PLAYERS).child(player.id).setValue(player)
     }
 
     fun createRoomListener(request: ListenerRequest): ValueEventListener {
-        return database.getReference(FirebaseDatabase.ROOM).child(request.roomCode).addValueEventListener(request.listener)
+        return database.getReference(DatabaseInterface.ROOM).child(request.roomCode).addValueEventListener(request.listener)
     }
 
     fun getRoom(roomCode: String): Task<DataSnapshot> {
-        return database.getReference(FirebaseDatabase.ROOM).child(roomCode).get()
+        return database.getReference(DatabaseInterface.ROOM).child(roomCode).get()
     }
 
     fun startGame(room: RoomModel) {

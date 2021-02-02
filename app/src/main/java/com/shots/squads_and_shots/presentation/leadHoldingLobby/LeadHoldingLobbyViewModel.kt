@@ -8,21 +8,26 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.QuerySnapshot
+import com.shots.squads_and_shots.core.utils.justValue
 import com.shots.squads_and_shots.domain.*
-import com.shots.squads_and_shots.network.StartGameRequest
 import com.shots.squads_and_shots.network.models.RuleListeners
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.JoinModel
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.ListenerRequest
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.Player
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.RoomModel
 import com.shots.squads_and_shots.presentation.models.Rules
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.random.Random
 
 class LeadHoldingLobbyViewModel(
     private val createRoomUseCase: CreateRoomUseCase,
     private val joinRoomUseCase: JoinRoomUseCase,
-    private val addRoomListener: AddRoomListener,
-    private val getGeneralRulesUseCase: GetGeneralRulesUseCase,
-    private val startGameUseCase: StartGameUseCase
+    private val addRoomListenerUseCase: AddRoomListenerUseCase,
+    private val getAllRulesUseCase: GetAllRulesUseCase,
+    private val startGameUseCase: StartGameUseCase,
+    private val createOrGetUserUniqueId: CreateOrGetUserUniqueId
 ) : ViewModel() {
 
     var roomModelCreatedResult: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -48,7 +53,7 @@ class LeadHoldingLobbyViewModel(
         }
     }
 
-    fun createRoomOnFirebase(room: RoomModel) {
+    private fun createRoomOnFirebase(room: RoomModel) {
         createRoomUseCase.invoke(viewModelScope, room) { result ->
             result.result(
                 onSuccess = {
@@ -64,7 +69,7 @@ class LeadHoldingLobbyViewModel(
 
     fun createValueEventListener(roomCode: String) {
         val listenerRequest = createRoomListenerRequest(roomCode)
-        addRoomListener.invoke(viewModelScope, listenerRequest) { result ->
+        addRoomListenerUseCase.invoke(viewModelScope, listenerRequest) { result ->
             result.result(
                 onSuccess = {},
                 onFailure = {}
@@ -74,12 +79,12 @@ class LeadHoldingLobbyViewModel(
 
     fun getGeneralRules() {
         val rulesListeners = createRuleListeners()
-        getGeneralRulesUseCase.invoke(viewModelScope, rulesListeners) {}
+        getAllRulesUseCase.invoke(viewModelScope, rulesListeners) {}
     }
 
     private fun createRuleListeners(): RuleListeners {
         val success = OnSuccessListener<QuerySnapshot> {
-            _generalRules.value = it.documents.get(0).toObject(Rules::class.java)
+            _generalRules.value = it.documents[0].toObject(Rules::class.java)
         }
         val failure = OnFailureListener {
             Log.d("Creare rule listeners","Failed, unsure what to do here just yet")
@@ -105,6 +110,72 @@ class LeadHoldingLobbyViewModel(
 
     fun startGame(roomModel: RoomModel) {
         startGameUseCase.invoke(viewModelScope, roomModel)
+    }
+
+    fun createPersonalPlayer(userName: String, uniqueUserCode: String): Player {
+        val player = Player()
+        player.id = uniqueUserCode
+        player.name = userName
+        return player
+    }
+
+    fun generateGameCode(): String = UUID.randomUUID().toString().substring(0, 5)
+
+    fun generateUniqueUserCode(): String = createOrGetUserUniqueId.justValue()
+
+    fun createRoom(roomCode: String, leadPlayer: Player) {
+        val roomModel = RoomModel()
+        roomModel.players[leadPlayer.id] = leadPlayer
+        roomModel.roomCode = roomCode
+
+        createRoomOnFirebase(roomModel)
+    }
+
+    fun assignRules(rules: Rules, players: List<Player>): Rules {
+        val availablePlayers = players as MutableList
+        rules.generalRules.forEach {
+            it.players = players as ArrayList<Player>
+        }
+
+        rules.secretTasks.forEach {
+            val assignedPlayer = availablePlayers.random()
+            availablePlayers.remove(assignedPlayer)
+            it.players.add(assignedPlayer)
+        }
+        return rules
+    }
+
+    fun filterRules(rules: Rules): Rules {
+        val shuffledGeneralList = rules.generalRules.shuffled()
+        val shuffledNominatedList = rules.nominatedRules.shuffled()
+        val shuffledSecretList = rules.secretTasks.shuffled()
+
+        if(shuffledGeneralList.size < 7) {
+            rules.generalRules = shuffledGeneralList
+        } else {
+            rules.generalRules = shuffledGeneralList.subList(0, 6)
+        }
+
+        if(shuffledNominatedList.size < 3) {
+            rules.nominatedRules = shuffledNominatedList
+        } else {
+            rules.nominatedRules = shuffledNominatedList.subList(0, 2)
+        }
+
+        if(shuffledSecretList.size < 3) {
+            rules.secretTasks = shuffledSecretList.subList(0, Random.nextInt(shuffledSecretList.size))
+        } else {
+            rules.secretTasks = shuffledSecretList.subList(0, Random.nextInt(3))
+        }
+        return rules
+    }
+
+    fun convertIntoPlayers(players: HashMap<String, Player>): List<Player>{
+        val playerList = mutableListOf<Player>()
+        players.forEach {
+            playerList.add(it.value)
+        }
+        return playerList
     }
 
 }

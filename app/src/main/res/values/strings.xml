@@ -12,4 +12,10 @@
     <string name="apex">Apex</string>
     <string name="fortnite">Fortnite</string>
     <string name="select_a_game">Select a game</string>
+    <string name="finish_game">Finish Game</string>
+    <string name="game_rules">Game Rules</string>
+    <string name="your_secret_task">Your secret task</string>
+    <string name="nominated_rules">Nominated Rules</string>
+    <string name="the_following_people_will_have_to_drink">The following people, will have to drink?</string>
+    <string name="yes_make_them_drink">Yes, make them drink!</string>
 </resources>

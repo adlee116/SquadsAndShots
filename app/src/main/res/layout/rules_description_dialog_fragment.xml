@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="330dp"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:background="@drawable/curved_edge">
+
+    <TextView
+        android:id="@+id/ruleTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/black"
+        tools:text="Scavanger Hunt"
+        android:layout_marginTop="12dp"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ruleTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="12dp"
+        android:textStyle="bold|italic"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="22sp"
+        tools:text="Pick up a Scavenger Contract, race on. Whoever doesn't get a box or the last one to get one, must drink."/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 package com.shots.squads_and_shots.presentation.leadHoldingLobby
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,22 +9,21 @@ import com.shots.squads_and_shots.databinding.LeadHoldingLobbyBinding
 import com.shots.squads_and_shots.presentation.homePage.GameChooserDialog
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.Player
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.model.RoomModel
+import com.shots.squads_and_shots.presentation.mainGameRoom.MainGameRoom
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
-import kotlin.collections.HashMap
 
 class LeadHoldingLobby : AppCompatActivity() {
-
-    lateinit var adapter: PlayerListAdapter
-    lateinit var binding: LeadHoldingLobbyBinding
-    lateinit var uniqueUserCode: String
-    lateinit var gameCode: String
 
     private val viewModel: LeadHoldingLobbyViewModel by viewModel()
     private var userName: String? = null
     private var leader: Boolean = false
+
+    lateinit var adapter: PlayerListAdapter
+    lateinit var binding: LeadHoldingLobbyBinding
+    lateinit var gameCode: String
     lateinit var player: Player
     lateinit var roomModel: RoomModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,30 +32,29 @@ class LeadHoldingLobby : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        setLocalInfo()
         setAdapter()
+        setLocalInfo()
         setObservers()
         setClickListeners()
-
-        userName?.let { player = createPersonalPlayer(it, uniqueUserCode) }
-
-        adapter.addPlayer(player.name)
-        if (leader) {
-            createRoom(gameCode, player)
-            binding.lobbyCode.text = gameCode
-        } else {
-            viewModel.createValueEventListener(gameCode)
-        }
     }
 
     private fun setLocalInfo() {
-        userName = intent.getStringExtra(GameChooserDialog.USERNAME)
         leader = intent.getBooleanExtra(GameChooserDialog.LEADER, false)
-        uniqueUserCode = generateUniqueUserCode()
-        gameCode = if(leader) {
-            generateGameCode()
+        userName = intent.getStringExtra(GameChooserDialog.USERNAME)
+        gameCode = if (leader) {
+            viewModel.generateGameCode()
         } else {
             intent.getStringExtra(GameChooserDialog.GAME_CODE)!!
+        }
+
+        val uniqueUserId = viewModel.generateUniqueUserCode()
+        userName?.let { player = viewModel.createPersonalPlayer(it, uniqueUserId) }
+        adapter.addPlayer(player.name)
+        if (leader) {
+            viewModel.createRoom(gameCode, player)
+            binding.lobbyCode.text = gameCode
+        } else {
+            viewModel.createValueEventListener(gameCode)
         }
     }
 
@@ -72,8 +70,8 @@ class LeadHoldingLobby : AppCompatActivity() {
             roomModel = it
             updatePlayers(it.players)
             roomModel.generalRules?.let { rules ->
-                if(rules.isNotEmpty()) {
-                    //TODO go to main game page for all users
+                if (rules.isNotEmpty()) {
+                    goToMainGameRoom(gameCode)
                 }
             }
         })
@@ -81,9 +79,13 @@ class LeadHoldingLobby : AppCompatActivity() {
 
         })
         viewModel.generalRules.observe(this, Observer {
-            roomModel.generalRules = it.generalRules
-            roomModel.secretTasks = it.secretTasks
-            roomModel.nominatedRules = it.nominatedRules
+            val filteredRules = viewModel.filterRules(it)
+            val players = viewModel.convertIntoPlayers(roomModel.players)
+
+            val assignedRules = viewModel.assignRules(filteredRules, players)
+            roomModel.generalRules = assignedRules.generalRules
+            roomModel.secretTasks = assignedRules.secretTasks
+            roomModel.nominatedRules = assignedRules.nominatedRules
             viewModel.startGame(roomModel)
         })
     }
@@ -112,30 +114,14 @@ class LeadHoldingLobby : AppCompatActivity() {
         }
     }
 
-    private fun createRoom(roomCode: String, leadPlayer: Player) {
-        val roomModel = RoomModel()
-        roomModel.players[leadPlayer.id] = leadPlayer
-        roomModel.roomCode = roomCode
-
-        viewModel.createRoomOnFirebase(roomModel)
-    }
-
     private fun startGame() {
         viewModel.getGeneralRules()
     }
 
-    private fun generateGameCode(): String {
-        return UUID.randomUUID().toString().substring(0, 5)
+    private fun goToMainGameRoom(roomCode: String) {
+        val intent = Intent(this, MainGameRoom::class.java)
+        intent.putExtra(GameChooserDialog.GAME_CODE, roomCode)
+        startActivity(intent)
     }
 
-    private fun generateUniqueUserCode(): String {
-        return UUID.randomUUID().toString()
-    }
-
-    private fun createPersonalPlayer(userName: String, uniqueUserCode: String): Player {
-        val player = Player()
-        player.id = uniqueUserCode
-        player.name = userName
-        return player
-    }
 }
