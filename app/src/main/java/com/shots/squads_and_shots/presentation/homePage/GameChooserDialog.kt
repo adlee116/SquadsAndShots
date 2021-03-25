@@ -13,7 +13,7 @@ import com.shots.squads_and_shots.databinding.GameChooserDialogBinding
 import com.shots.squads_and_shots.presentation.leadHoldingLobby.LeadHoldingLobby
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class GameChooserDialog : BottomSheetDialogFragment() {
+class GameChooserDialog : DialogFragment() {
 
     private var _binding: GameChooserDialogBinding? = null
 

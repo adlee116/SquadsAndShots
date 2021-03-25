@@ -1,6 +1,10 @@
 package com.shots.squads_and_shots.presentation.mainGameRoom
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -11,7 +15,8 @@ import com.shots.squads_and_shots.presentation.homePage.GameChooserDialog
 import com.shots.squads_and_shots.presentation.models.SecretTasks
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainGameRoom: AppCompatActivity() {
+
+class MainGameRoom : AppCompatActivity() {
 
     private val viewModel: GameRoomViewModel by viewModel()
 
@@ -47,11 +52,12 @@ class MainGameRoom: AppCompatActivity() {
             generalRulesAdapter.updateItems(generalRuleAdapterItems)
             nominatedRulesAdapter.updateItems(nominatedRuleAdapterItems)
             it.secretTasks?.let { secretTasks ->
-                viewModel.secretTaskAvailable(secretTasks, viewModel.getUserUniqueId())?.let { task ->
-                    setSecretTask(task)
-                } ?: run {
+                viewModel.secretTaskAvailable(secretTasks, viewModel.getUserUniqueId())
+                    ?.let { task ->
+                        setSecretTask(task)
+                    } ?: run {
                     hideSecretTask()
-            }
+                }
             } ?: run {
                 hideSecretTask()
             }
@@ -62,7 +68,8 @@ class MainGameRoom: AppCompatActivity() {
         })
 
         viewModel.drinkOccasions.observe(this, Observer {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
+                alertTheUser()
                 showTimeToDrinkDialog(it)
             }
         })
@@ -87,9 +94,12 @@ class MainGameRoom: AppCompatActivity() {
     private fun setSecretTask(task: SecretTasks) {
         binding.secretTaskTitle.text = task.title
         binding.secretTaskItem.setOnClickListener {
-            showRuleDetail(viewModel.createRuleViewHolderItem(task.title, task.description, task.image,
-                task.players
-            ))
+            showRuleDetail(
+                viewModel.createRuleViewHolderItem(
+                    task.title, task.description, task.image,
+                    task.players
+                )
+            )
         }
     }
 
@@ -99,7 +109,12 @@ class MainGameRoom: AppCompatActivity() {
     }
 
     private fun showDrinkAreYouSure(rule: RuleViewHolderItem) {
-        val fragment = AreYouSureDrinkPromptFragment.newInstance(rule.player, roomCode, rule.title, rule.ruleFunnyString)
+        val fragment = AreYouSureDrinkPromptFragment.newInstance(
+            rule.player,
+            roomCode,
+            rule.title,
+            rule.ruleFunnyString
+        )
         fragment.show(this.supportFragmentManager, "AreYouSureDrinkPromptFragment")
     }
 
@@ -113,6 +128,11 @@ class MainGameRoom: AppCompatActivity() {
         }
     }
 
+    private fun alertTheUser() {
+        val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+    }
+
     private fun hideSecretTask() {
         binding.secretTaskItem.isVisible = false
         binding.secretTaskTitle.isVisible = false
@@ -121,7 +141,12 @@ class MainGameRoom: AppCompatActivity() {
     }
 
     private fun showTimeToDrinkDialog(list: List<DrinkOccasion>) {
-
+        val funnyList = mutableListOf<String>()
+        list.forEach {
+            funnyList.add(it.ruleFunnyString)
+        }
+        val fragment = TimeToDrinkFragment.newInstance(funnyList.size, funnyList as ArrayList<String>)
+        fragment.show(this.supportFragmentManager, "TimeToDrinkFragment")
     }
 
 }

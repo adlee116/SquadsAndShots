@@ -73,6 +73,7 @@ class AreYouSureDrinkPromptFragment: DialogFragment() {
     private fun setOnClickListeners() {
         binding.makeThemDrinkButton.setOnClickListener {
             viewModel.submitDrinkRequest(playersToDrink, ruleTitle, ruleFunnyString, roomCode)
+            dismiss()
         }
     }
 

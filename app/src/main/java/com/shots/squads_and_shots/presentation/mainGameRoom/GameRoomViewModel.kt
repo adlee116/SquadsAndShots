@@ -34,7 +34,7 @@ class GameRoomViewModel(
     private val _drinkOccasions = MutableLiveData<List<DrinkOccasion>>()
     val drinkOccasions: LiveData<List<DrinkOccasion>> get() = _drinkOccasions
 
-    private var lastKnownDrinkOccasionChecked = -1
+    private var nextIndexToCheckForDrink = 0
 
     fun createValueEventListener(roomCode: String) {
         val listenerRequest = createRoomListenerRequest(roomCode)
@@ -114,13 +114,12 @@ class GameRoomViewModel(
 
     fun checkIfINeedToDrink(list: List<DrinkOccasion>) {
         val myDrinkOccasions = mutableListOf<DrinkOccasion>()
-        if(list.size > lastKnownDrinkOccasionChecked) {
-            for (i in lastKnownDrinkOccasionChecked until list.size) {
+        if(list.size > nextIndexToCheckForDrink) {
+            for(i in nextIndexToCheckForDrink until list.size)
                 if(doesThisOccasionContainMe(list[i])) {
                     myDrinkOccasions.add(list[i])
                 }
-            }
-            lastKnownDrinkOccasionChecked = list.size - 1
+            nextIndexToCheckForDrink = list.size
         }
         if(myDrinkOccasions.isNotEmpty()) {
             _drinkOccasions.value = myDrinkOccasions
@@ -146,7 +145,6 @@ class GameRoomViewModel(
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val drinkOccasionList = mutableListOf<DrinkOccasion>()
-
                     val children = snapshot.children
                     children.forEach{
                         val drinkOccasion = it.getValue(DrinkOccasion::class.java)
@@ -154,6 +152,7 @@ class GameRoomViewModel(
                             drinkOccasionList.add(drink)
                         }
                     }
+                    _drinkHistory.value = drinkOccasionList
                 }
             }
 

@@ -18,4 +18,6 @@
     <string name="nominated_rules">Nominated Rules</string>
     <string name="the_following_people_will_have_to_drink">The following people, will have to drink?</string>
     <string name="yes_make_them_drink">Yes, make them drink!</string>
+    <string name="timeToDrink">Time to drink</string>
+    <string name="number_of_drinks_required">Number of drinks required:</string>
 </resources>
