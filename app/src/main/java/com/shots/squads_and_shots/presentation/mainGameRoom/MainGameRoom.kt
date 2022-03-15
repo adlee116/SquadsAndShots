@@ -93,14 +93,14 @@ class MainGameRoom : AppCompatActivity() {
 
     private fun setSecretTask(task: SecretTasks) {
         binding.secretTaskTitle.text = task.title
-        binding.secretTaskItem.setOnClickListener {
-            showRuleDetail(
-                viewModel.createRuleViewHolderItem(
-                    task.title, task.description, task.image,
-                    task.players
-                )
-            )
-        }
+//        binding.secretTaskItem.setOnClickListener {
+//            showRuleDetail(
+//                viewModel.createRuleViewHolderItem(
+//                    task.title, task.description, task.image,
+//                    task.players
+//                )
+//            )
+//        }
     }
 
     private fun showRuleDetail(task: RuleViewHolderItem) {
@@ -130,14 +130,14 @@ class MainGameRoom : AppCompatActivity() {
 
     private fun alertTheUser() {
         val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+//        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
     }
 
     private fun hideSecretTask() {
-        binding.secretTaskItem.isVisible = false
+//        binding.secretTaskItem.isVisible = false
         binding.secretTaskTitle.isVisible = false
-        binding.secretDownButtonImage.isVisible = false
-        binding.secretTitle.isVisible = false
+//        binding.secretDownButtonImage.isVisible = false
+//        binding.secretTitle.isVisible = false
     }
 
     private fun showTimeToDrinkDialog(list: List<DrinkOccasion>) {
